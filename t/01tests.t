@@ -1,5 +1,5 @@
 # Tests for Math::Project3D::Plot
-# (c) 2002 Steffen Mueller, all rights reserved
+# (c) 2002-2003 Steffen Mueller, all rights reserved
 
 use strict;
 use warnings;
@@ -9,9 +9,12 @@ use Test::More tests => 12;
 
 use Math::Project3D::Plot;
 
-ok(1, 'Module compiled.'); # If we made it this far, we're ok.
+ok(1, 'Module compiled.'); # If we made it this far, we are ok.
 
-my $img  = Imager->new(xsize => 500, ysize => 500);
+my $img_size_x = 500;
+my $img_size_y = 500;
+
+my $img  = Imager->new(xsize => $img_size_x, ysize => $img_size_y);
 my $proj = Math::Project3D->new(
    plane_basis_vector => [ 0, 0, 0 ],
    plane_direction1   => [ .4, 1, 0 ],
@@ -28,7 +31,14 @@ my $y_axis     = Imager::Color->new(0, 255, 0);
 my $z_axis     = Imager::Color->new(0,   0, 255);
 my $background = Imager::Color->new(255,255,255);
 
-$img->flood_fill(x=>0,y=>0,color=>$background);
+$img->box(
+  color  => $background,
+  xmin   => 0,
+  ymin   => 0,
+  xmax   => $img_size_x,
+  ymax   => $img_size_y,
+  filled => 1,
+);
 
 ok(ref $img eq 'Imager', "Created Imager image and Math::Project3D object.");
 

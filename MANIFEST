@@ -3,4 +3,5 @@ MANIFEST
 Makefile.PL
 README
 lib/Math/Project3D/Plot.pm
+examples/example1.png
 t/01tests.t

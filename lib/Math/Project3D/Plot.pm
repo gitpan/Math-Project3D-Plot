@@ -1,7 +1,7 @@
 
 # See the POD documentation at the end of this
 # document for detailed copyright information.
-# (c) 2002 Steffen Mueller, all rights reserved.
+# (c) 2002-2003 Steffen Mueller, all rights reserved.
 
 package Math::Project3D::Plot;
 
@@ -15,7 +15,7 @@ use Math::Project3D;
 use Imager;
 
 use vars qw/$VERSION/;
-$VERSION = 1.010;
+$VERSION = 1.011;
 
 
 # Constructor class and object method new
@@ -357,7 +357,7 @@ Math::Project3D::Plot - Perl extension for plotting projections of 3D functions
 
 =head1 VERSION
 
-Current version is 1.010.
+Current version is 1.011.
 
 =head1 SYNOPSIS
 
@@ -376,7 +376,7 @@ Current version is 1.010.
     projection => $projection,
 
     # 1 logical unit => 10 pixels
-    scale      => 10
+    scale      => 10,
 
     # x/y coordinates of the origin in pixels
     origin_x   => $img->getwidth()  / 2,

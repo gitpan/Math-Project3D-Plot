@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::Project3D::Plot.
 
+1.011  Mon May 12 14:01:21 2003
+	- Fixed minor documentation bug.
+	- Now using Imager's box() method for setting the background.
+
 1.010  Sun Feb 23 16:18:10 2003
 	- New support for 'multiline' plot_range drawing method.
 	- Now requires version 1.010 of Math::Project3D due to this
