@@ -15,7 +15,7 @@ use Math::Project3D;
 use Imager;
 
 use vars qw/$VERSION/;
-$VERSION = 1.005;
+$VERSION = 1.010;
 
 
 # Constructor class and object method new
@@ -198,6 +198,24 @@ sub plot_range {
          # cache
          ($prev_g_x, $prev_g_y) = ($g_x, $g_y);
       };
+   } elsif ($type eq 'multiline') {
+      $callback = sub {
+         my $newline = $_[3]; # Did we start a new line?
+
+         # Get its coordinates
+         my ($g_x, $g_y) = $self->_l_g( @_[0,1] );
+
+         # Draw the line if not a new line:
+         $self->{image}->line(
+           color => $args{color},
+           x1 => $prev_g_x, y1 => $prev_g_y,
+           x2 => $g_x,      y2 => $g_y,
+         ) if defined $prev_g_x;
+
+         # cache
+         ($prev_g_x, $prev_g_y) = ($g_x, $g_y);
+         ($prev_g_x, $prev_g_y) = (undef, undef) if $newline;
+      };
    } else {
       $callback = sub {
          # Get its coordinates
@@ -339,7 +357,7 @@ Math::Project3D::Plot - Perl extension for plotting projections of 3D functions
 
 =head1 VERSION
 
-Current version is 1.005.
+Current version is 1.010.
 
 =head1 SYNOPSIS
 
@@ -384,6 +402,7 @@ Current version is 1.005.
               ],
     color  => $color, # see Imager manpage about colors
     type   => 'line', # connect points with lines
+                      # other option: 'points'
   );
 
   $plotter->plot_range(
@@ -394,6 +413,7 @@ Current version is 1.005.
               ],
     color  => $color,   # see Imager manpage about colors
     type   => 'points', # draw the points only 
+                        # other options: 'line' and 'multiline'
   );
 
   # Use Imager methods on $img to save the image to a file
@@ -435,9 +455,17 @@ with the function parameters passed to the method.
 Takes its arguments as key/value pairs. The following
 parameters are valid (and required):
 
-  color  => Imager color to use (see Imager::Color manpage)
-  params => Array reference containing a list of
-            function parameters
+=over 2
+
+=item color
+
+Imager color to use (see Imager::Color manpage)
+
+=item params
+
+Array reference containing a list of function parameters
+
+=back
 
 In addition to plotting the point, the method returns the
 graphical coordinates of the point.
@@ -449,11 +477,23 @@ with the sets of function parameters passed to the method.
 Takes its arguments as key/value pairs. The following
 parameters are valid:
 
-  color  => Imager color to use (see Imager::Color manpage)
-  params => Array reference containing any number of array
-            references containing sets of function parameters
-  type   => 'line' or 'points' (connect points or not)
-            (defaults to 'points')
+=over 2
+
+=item color
+
+Imager color to use (see Imager::Color manpage)
+
+=item params
+
+Array reference containing any number of array
+references containing sets of function parameters
+
+=item type
+
+May be either 'line' or 'points' (connect points or not)
+(defaults to 'points').
+
+=back
 
 =item plot_range
 
@@ -462,14 +502,35 @@ with the function parameter ranges passed to the method.
 Takes its arguments as key/value pairs. The following
 parameters are valid:
 
-  color  => Imager color to use (see Imager::Color manpage)
-  params => Array reference containing an array reference
-            for every function parameter. These inner array
-            references are to contain one or three items:
-            one: static parameter
-            three: lower boundary, upper boundary, increment
-  type   => 'line' or 'points' (connect points or not)
-            (defaults to 'points')
+=over 2
+
+=item color
+
+Imager color to use (see Imager::Color manpage)
+
+=item params
+
+Array reference containing an array reference
+for every function parameter. These inner array
+references are to contain one or three items:
+one: static parameter
+three: lower boundary, upper boundary, increment
+
+=item type
+
+May be either 'line' or 'points'
+(connect points or not) (defaults to 'points').
+
+I<New in v1.010:> type 'multiline' that works similar
+to 'line', but does not connect points whenever
+a parameter other than the innermost one is
+incremented. This is usually the desired method
+whenever you are plotting functions of multiple
+parameters and are experiencing odd lines connecting
+different parts of the function. 'multiline' is only
+a valid type for 'plot_range', not for the other plotting methods.
+
+=back
 
 =item plot_axis
 
@@ -490,7 +551,7 @@ Steffen Mueller, E<lt>project3d-module at steffen-mueller dot net<gt>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2002 Steffen Mueller. All rights reserved.
+Copyright (c) 2002-2003 Steffen Mueller. All rights reserved.
 This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 

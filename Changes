@@ -1,5 +1,11 @@
 Revision history for Perl extension Math::Project3D::Plot.
 
+1.010  Sun Feb 23 16:18:10 2003
+	- New support for 'multiline' plot_range drawing method.
+	- Now requires version 1.010 of Math::Project3D due to this
+          new feature.
+	- Added tests and fixed old tests.
+
 1.005  Wed Nov 27 22:23:32 2002
 	- Support for rotation as defined in Math::Project3D since
           version 1.006. Good grief, what an evil hack.

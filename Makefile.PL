@@ -6,7 +6,7 @@ WriteMakefile(
     'VERSION_FROM'	=> 'lib/Math/Project3D/Plot.pm', # finds $VERSION
     'PREREQ_PM'		=> {
       Imager          => 0.41,
-      Math::Project3D => 1.007,
+      Math::Project3D => 1.010,
       Test::More      => 0.44,
     }, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005

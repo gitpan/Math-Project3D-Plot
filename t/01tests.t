@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 # use lib 'lib';
-use Test::More tests => 11;
+use Test::More tests => 12;
 
 use Math::Project3D::Plot;
 
@@ -64,7 +64,7 @@ ok(1, "plot_list as a line did not croak.");
 $plotter->plot_list(
   color  => $color,
   params => \@params,
-  type   => 'line',
+  type   => 'points',
 );
 
 ok(1, "plot_list as points did not croak.");
@@ -90,6 +90,18 @@ $plotter->plot_range(
 );
 
 ok(1, "plot_range as points did not croak.");
+
+
+$plotter->plot_range(
+  color  => $color,
+  params => [
+              [-10, 0, 1],
+              [-10, 0, 1],
+            ],
+  type   => 'multiline',
+);
+
+ok(1, "plot_range as multiline did not croak.");
 
 $plotter->plot_axis( # x axis
   vector => [1, 0, 0],
