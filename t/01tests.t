@@ -4,6 +4,7 @@
 use strict;
 use warnings;
 
+# use lib 'lib';
 use Test::More tests => 11;
 
 use Math::Project3D::Plot;

@@ -15,7 +15,7 @@ use Math::Project3D;
 use Imager;
 
 use vars qw/$VERSION/;
-$VERSION = 1.004;
+$VERSION = 1.005;
 
 
 # Constructor class and object method new
@@ -116,7 +116,7 @@ sub plot_list {
    my %args   = @_;
 
    ref $args{params} eq 'ARRAY' or
-     croak "Invalid parameters passed to plot().";
+     croak "Invalid parameters passed to plot_list().";
 
    # Get type, default to points
    my $type = $args{type};
@@ -170,7 +170,7 @@ sub plot_range {
    my %args   = @_;
 
    ref $args{params} eq 'ARRAY' or
-     croak "Invalid parameters passed to plot().";
+     croak "Invalid parameters passed to plot_range().";
 
    # Get type, default to points
    my $type = $args{type};
@@ -327,7 +327,6 @@ sub plot_axis {
 }
 
 
-
 1;
 
 __END__
@@ -340,7 +339,7 @@ Math::Project3D::Plot - Perl extension for plotting projections of 3D functions
 
 =head1 VERSION
 
-Current version is 1.004.
+Current version is 1.005.
 
 =head1 SYNOPSIS
 

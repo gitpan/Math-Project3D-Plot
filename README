@@ -1,4 +1,4 @@
-Math::Project3D::Plot version 1.004
+Math::Project3D::Plot version 1.005
 ===================================
 
 INTRODUCTION
@@ -23,11 +23,15 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-  Imager
-  Math::MatrixReal
-  Math::Project3D
-  Math::Project3D::Function
-  Test::More
+  Imager 0.41 or newer
+  Math::MatrixReal 1.9 or newer
+  Math::Project3D 1.007 or newer
+  Math::Project3D::Function 1.007 or newer
+  Test::More 0.44 or newer
+
+Note that it may well work with older versions of these modules,
+but I cannot guarantee that it will because I only tested it with
+the versions listed.
 
 COPYRIGHT AND LICENCE
 

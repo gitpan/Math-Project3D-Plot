@@ -3,13 +3,13 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile(
     'NAME'		=> 'Math::Project3D::Plot',
-    'VERSION_FROM'	=> 'Math/Project3D/Plot.pm', # finds $VERSION
+    'VERSION_FROM'	=> 'lib/Math/Project3D/Plot.pm', # finds $VERSION
     'PREREQ_PM'		=> {
       Imager          => 0.41,
-      Math::Project3D => 1.005,
+      Math::Project3D => 1.007,
       Test::More      => 0.44,
     }, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
-      (ABSTRACT_FROM => 'Math/Project3D/Plot.pm', # retrieve abstract from module
+      (ABSTRACT_FROM => 'lib/Math/Project3D/Plot.pm', # retrieve abstract from module
        AUTHOR     => 'Steffen Mueller <project3d-module@steffen-mueller.net>') : ()),
 );

@@ -1,6 +1,6 @@
 Changes
-Makefile.PL
 MANIFEST
-Math/Project3D/Plot.pm
+Makefile.PL
 README
-test.pl
+lib/Math/Project3D/Plot.pm
+t/01tests.t

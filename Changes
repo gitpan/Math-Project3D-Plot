@@ -1,5 +1,10 @@
 Revision history for Perl extension Math::Project3D::Plot.
 
+1.005  Wed Nov 27 22:23:32 2002
+	- Support for rotation as defined in Math::Project3D since
+          version 1.006. Good grief, what an evil hack.
+	- Fixed packaging issues.
+
 1.004  Sat Nov 23 20:30:10 2002
 	- Documentation fixes
 
