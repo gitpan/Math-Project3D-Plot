@@ -15,7 +15,7 @@ use Math::Project3D;
 use Imager;
 
 use vars qw/$VERSION/;
-$VERSION = 1.001;
+$VERSION = 1.004;
 
 
 # Constructor class and object method new
@@ -103,6 +103,121 @@ sub plot {
 }
 
 
+# Method plot_list
+# Takes argument pairs: color => Imager color,
+# params => array ref of array ref of params
+# and type => 'line' or 'points'
+# Projects the points associated with the parameters.
+# Plots the either points or the line connecting them.
+# Returns 1.
+
+sub plot_list {
+   my $self   = shift;
+   my %args   = @_;
+
+   ref $args{params} eq 'ARRAY' or
+     croak "Invalid parameters passed to plot().";
+
+   # Get type, default to points
+   my $type = $args{type};
+   $type ||= 'points';
+
+   # Do some calulation on the points.
+   my $matrix = $self->{proj}->project_list( @{ $args{params} } );
+
+   # Cache
+   my ($prev_g_x, $prev_g_y);
+
+   # For every point...
+   for ( my $row = 1; $row <= @{$args{params}}; $row++ ) {
+
+      # Get its coordinates
+      my ($g_x, $g_y) = $self->_l_g(
+                            $matrix->element($row,1),
+                            $matrix->element($row,2)
+                          );
+
+      # Plot line or points?
+      if ( $type eq 'line' ) {
+
+         $self->{image}->line(
+           color => $args{color},
+           x1 => $prev_g_x, y1 => $prev_g_y,
+           x2 => $g_x,      y2 => $g_y,
+         ) if defined $prev_g_x;
+
+         ($prev_g_x, $prev_g_y) = ($g_x, $g_y);
+
+      } else {
+         $self->{image}->setpixel(color=>$args{color}, x=>$g_x, y=>$g_y);
+      }
+   }
+
+   return 1;
+}
+
+
+# Method plot_range
+# Takes argument pairs: color => Imager color,
+# params => array ref of array ref of ranges
+# and type => 'line' or 'points'
+# Projects the points associated with the parameter ranges.
+# Plots the either points or the line connecting them.
+# Returns 1.
+
+sub plot_range {
+   my $self   = shift;
+   my %args   = @_;
+
+   ref $args{params} eq 'ARRAY' or
+     croak "Invalid parameters passed to plot().";
+
+   # Get type, default to points
+   my $type = $args{type};
+   $type ||= 'points';
+
+   # Cache
+   my ($prev_g_x, $prev_g_y);
+
+   # This will hold the callback routine
+   my $callback;
+
+   # Use different callbacks for different drawing types
+   if ($type eq 'line') {
+      $callback = sub {
+         # Get its coordinates
+         my ($g_x, $g_y) = $self->_l_g( @_[0,1] );
+
+         # Draw the line
+         $self->{image}->line(
+           color => $args{color},
+           x1 => $prev_g_x, y1 => $prev_g_y,
+           x2 => $g_x,      y2 => $g_y,
+         ) if defined $prev_g_x;
+
+         # cache
+         ($prev_g_x, $prev_g_y) = ($g_x, $g_y);
+      };
+   } else {
+      $callback = sub {
+         # Get its coordinates
+         my ($g_x, $g_y) = $self->_l_g( @_[0,1] );
+
+         # draw the point
+         $self->{image}->setpixel(color=>$args{color}, x=>$g_x, y=>$g_y);
+      };
+   }
+
+   # Start the projection
+   $self->{proj}->project_range_callback(
+     $callback,
+     @{ $args{params} },
+   );
+
+   return 1;
+}
+
+
 # Private method _require_attributes
 # 
 # Arguments must be a list of attribute names (strings).
@@ -158,6 +273,60 @@ sub _g_l {
 }
 
 
+# Method plot_axis
+#
+# The plot_axis method draws an axis into the image. "Axis" used
+# as in "a line that goes through the origin". Required arguments:
+#  color  => Imager color to use (see Imager::Color manpage)
+#  vector => Array ref containing three vector components.
+#            (only the direction matters as the vector will
+#            be normalized by plot_axis.)
+#  length => Desired axis length.
+
+sub plot_axis {
+   my $self = shift;
+   my %args = @_;
+
+   ref $args{vector} eq 'ARRAY' or
+     croak "Invalid vector passed to plot_axis().";
+
+   # Save original function
+   my $old_function = $self->{proj}->get_function();
+
+   # Directional vector of the axis
+   my @vector = @{ $args{vector} };
+
+   # Create new function along the axis' directional vector
+   # using only one parameter t that will be determined
+   # below
+   $self->{proj}->new_function(
+      't', "$vector[0]*\$t", "$vector[1]*\$t", "$vector[2]*\$t",
+   );
+
+   # Calculate the length of the unit vector
+   my $vector_length = sqrt( $vector[0]**2 + $vector[1]**2 + $vector[2]**2 );
+
+   # Calculate $t, the number of units needed to get
+   # a line of the correct length.
+   my $t = $args{length} / ( 2 * $vector_length );
+
+   # Use the plot_list method to display the axis.
+   $self->plot_list(
+     color  => $args{color},
+     type   => 'line',
+     params => [
+                 [-$t], # We calculated for $t for length/2, hence
+                 [$t],  # we may now draw from -$t to +$t
+               ],
+   );
+
+   # Restore original function
+   $self->{proj}->set_function($old_function);
+
+   return 1;
+}
+
+
 
 1;
 
@@ -171,7 +340,7 @@ Math::Project3D::Plot - Perl extension for plotting projections of 3D functions
 
 =head1 VERSION
 
-Current version is 1.001. Alpha software distributed for testing purposes.
+Current version is 1.004.
 
 =head1 SYNOPSIS
 
@@ -195,6 +364,12 @@ Current version is 1.001. Alpha software distributed for testing purposes.
     # x/y coordinates of the origin in pixels
     origin_x   => $img->getwidth()  / 2,
     origin_y   => $img->getheight() / 2,
+  );
+
+  $plotter->plot_axis(
+    color  => $color,    # see Imager manpage about colors
+    vector => [1, 0, 0], # That's the x-axis
+    length => 100,
   );
 
   $plotter->plot(
@@ -226,7 +401,89 @@ Current version is 1.001. Alpha software distributed for testing purposes.
 
 =head1 DESCRIPTION
 
-No description yet. This is alpha software. Read the source.
+This module may be used to plot the results of a projection
+from a three dimensional vectorial function onto a plane into
+an image. What a horrible sentence.
+
+=head2 Methods
+
+=over 4
+
+=item new
+
+new is the constructor for Math::Project3D::Plot objects.
+Using the specified arguments, it creates a new instance
+of Math::Project3D::Plot. Parameters are passed as a list
+of key value pairs. Valid parameters are:
+
+  required:
+  image      => Imager object to draw into
+  projection => Math::Project3D object to get projected
+                points from
+
+  optional:
+  scale      => how many pixels per logical unit
+                (defaults to 10)
+  origin_x   => graphical x coordinate of the origin
+  origin_y   => graphical y coordinate of the origin
+                (default to half the width/height of the
+                image)  
+
+=item plot
+
+The plot method plots the projected point associated
+with the function parameters passed to the method.
+Takes its arguments as key/value pairs. The following
+parameters are valid (and required):
+
+  color  => Imager color to use (see Imager::Color manpage)
+  params => Array reference containing a list of
+            function parameters
+
+In addition to plotting the point, the method returns the
+graphical coordinates of the point.
+
+=item plot_list
+
+The plot_list method plots all projected points associated
+with the sets of function parameters passed to the method.
+Takes its arguments as key/value pairs. The following
+parameters are valid:
+
+  color  => Imager color to use (see Imager::Color manpage)
+  params => Array reference containing any number of array
+            references containing sets of function parameters
+  type   => 'line' or 'points' (connect points or not)
+            (defaults to 'points')
+
+=item plot_range
+
+The plot_range method plots all projected points associated
+with the function parameter ranges passed to the method.
+Takes its arguments as key/value pairs. The following
+parameters are valid:
+
+  color  => Imager color to use (see Imager::Color manpage)
+  params => Array reference containing an array reference
+            for every function parameter. These inner array
+            references are to contain one or three items:
+            one: static parameter
+            three: lower boundary, upper boundary, increment
+  type   => 'line' or 'points' (connect points or not)
+            (defaults to 'points')
+
+=item plot_axis
+
+The plot_axis method draws an axis into the image. "Axis" used
+as in "a line that goes through the origin". Required arguments:
+
+  color  => Imager color to use (see Imager::Color manpage)
+  vector => Array ref containing three vector components.
+            (only the direction matters as the vector will
+            be normalized by plot_axis.)
+  length => Desired axis length.
+
+=back
 
 =head1 AUTHOR
 
@@ -240,8 +497,7 @@ modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Math::Project3D>
-L<Math::Project3D::Function>
+L<Imager>, L<Math::Project3D>, L<Math::Project3D::Function>,
 L<Math::MatrixReal>
 
 =cut

@@ -1,4 +1,17 @@
 Revision history for Perl extension Math::Project3D::Plot.
 
+1.004  Sat Nov 23 20:30:10 2002
+	- Documentation fixes
+
+1.003  Sat Nov 23 19:02:23 2002
+	- Added plot_axis function
+	- More docs
+	- Bugfixes
+
+1.002  Sat Nov 23 17:02:23 2002
+	- Added plot_list function
+	- Added plot_range function
+	- Added documentation
+
 1.001  Fri Nov 22 18:22:05 2002
 	- Original version
