@@ -1,7 +1,7 @@
 
 # See the POD documentation at the end of this
 # document for detailed copyright information.
-# (c) 2002-2003 Steffen Mueller, all rights reserved.
+# (c) 2002-2006 Steffen Mueller, all rights reserved.
 
 package Math::Project3D::Plot;
 
@@ -15,7 +15,7 @@ use Math::Project3D;
 use Imager;
 
 use vars qw/$VERSION/;
-$VERSION = 1.011;
+$VERSION = '1.02';
 
 
 # Constructor class and object method new
@@ -355,10 +355,6 @@ __END__
 
 Math::Project3D::Plot - Perl extension for plotting projections of 3D functions
 
-=head1 VERSION
-
-Current version is 1.011.
-
 =head1 SYNOPSIS
 
   use Math::Project3D::Plot;
@@ -547,11 +543,12 @@ as in "a line that goes through the origin". Required arguments:
 
 =head1 AUTHOR
 
-Steffen Mueller, E<lt>project3d-module at steffen-mueller dot net<gt>
+Steffen Mueller, E<lt>smueller@cpan.orgE<gt>
 
-=head1 COPYRIGHT
+=head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2002-2003 Steffen Mueller. All rights reserved.
+Copyright (c) 2002-2006 Steffen Mueller. All rights reserved.
+
 This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 

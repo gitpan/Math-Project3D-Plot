@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::Project3D::Plot.
 
+1.02  Sun Nov  5 18:56 2006
+    - Distribution upgrade: Clear licenses, spec-conformant META.yml,
+      etc.
+
 1.011  Mon May 12 14:01:21 2003
 	- Fixed minor documentation bug.
 	- Now using Imager's box() method for setting the background.

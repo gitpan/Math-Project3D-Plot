@@ -1,5 +1,5 @@
-Math::Project3D::Plot version 1.011
-===================================
+Math::Project3D::Plot
+=====================
 
 INTRODUCTION
 
@@ -25,24 +25,23 @@ This module requires these other modules and libraries:
 
   Imager 0.41 or newer
   Math::MatrixReal 1.9 or newer
-  Math::Project3D 1.010 or newer
-  Math::Project3D::Function 1.010 or newer
+  Math::Project3D 1.02 or newer
   Test::More 0.44 or newer
 
 Note that it may well work with older versions of these modules,
 but I cannot guarantee that it will because I only tested it with
 the versions listed.
-Since v1.010 of this module, it will no longer work with versions
-of Math::Project3D prior to 1.010. You should be able to find
+Since v1.020 of this module, it will no longer work with versions
+of Math::Project3D prior to 1.02. You should be able to find
 previous releases of this module in case you do not have the newest
-Math::Project3D availlable. Please look at the Changes file for
+Math::Project3D available. Please look at the Changes file for
 details on what you'll be missing.
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2002-2003 Steffen Mueller, all rights reserved.
+Copyright (C) 2002-2006 Steffen Mueller, all rights reserved.
 
-Author can be reached at <project3d-module@steffen-mueller.net>
+Author can be reached at <smueller@cpan.org>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
